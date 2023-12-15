@@ -111,6 +111,12 @@ offset_top = 50.0
 offset_right = 50.0
 offset_bottom = 73.0
 
+[node name="Delta" type="Label" parent="UI_Debug"]
+offset_left = 10.0
+offset_top = 70.0
+offset_right = 50.0
+offset_bottom = 93.0
+
 [node name="Footsteps" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.0871558, -0.996195, 0, 0.996195, -0.0871558, 0, -0.8, -0.4)
 stream = ExtResource("4_5786v")

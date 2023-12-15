@@ -35,7 +35,10 @@ var stats_fitness: float = stats_max_fitness
 var stats_stamina_regen: bool = true
 var stats_fitness_regen: bool = true
 func update_stats(delta):
-	pos_delta = abs(get_position_delta().x + get_position_delta().z)
+	pos_delta = sqrt(
+		pow(abs(get_position_delta().x), 2) +
+		pow(abs(get_position_delta().z), 2)
+	)
 	stats_yards += pos_delta
 	if stats_stamina_regen && (stats_stamina < stats_max_stamina):
 		if !pos_delta:
