@@ -1,0 +1,59 @@
+[gd_scene load_steps=12 format=3 uid="uid://du6fjyvtucq6l"]
+
+[ext_resource type="PackedScene" uid="uid://hg0glqxhmxwi" path="res://player.tscn" id="1_884wq"]
+[ext_resource type="Script" path="res://main.gd" id="1_x5usq"]
+[ext_resource type="Texture2D" uid="uid://y3a3coch6nr4" path="res://textures/metal_plate_diff_4k.png" id="2_kceb2"]
+[ext_resource type="Texture2D" uid="uid://dr2vgxe74dtrd" path="res://textures/metal_plate_nor_gl_4k.png" id="3_r7tj1"]
+[ext_resource type="Texture2D" uid="uid://b1lqoy4nbiqkp" path="res://textures/metal_plate_bump_4k.png" id="4_53qvt"]
+[ext_resource type="Texture2D" uid="uid://dth4gi5is6no" path="res://textures/metal_plate_rough_4k.png" id="6_xhm1u"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7lbu7"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_j4hor"]
+sky_material = SubResource("ProceduralSkyMaterial_7lbu7")
+
+[sub_resource type="Environment" id="Environment_4w75i"]
+background_mode = 2
+sky = SubResource("Sky_j4hor")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kr45c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vv1ve"]
+albedo_texture = ExtResource("2_kceb2")
+roughness_texture = ExtResource("6_xhm1u")
+roughness_texture_channel = 4
+emission_operator = 1
+emission_texture = ExtResource("4_53qvt")
+normal_enabled = true
+normal_texture = ExtResource("3_r7tj1")
+heightmap_enabled = true
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("4_53qvt")
+subsurf_scatter_strength = 1.0
+subsurf_scatter_texture = ExtResource("4_53qvt")
+refraction_scale = -1.0
+refraction_texture = SubResource("NoiseTexture2D_kr45c")
+uv1_scale = Vector3(30, 30, 30)
+
+[node name="Main" type="Node"]
+script = ExtResource("1_x5usq")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4w75i")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.482963, 0.595035, -0.642402, -0.87001, -0.243018, 0.428982, 0.099144, 0.766078, 0.635055, 0, 7, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_884wq")]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+use_collision = true
+collision_layer = 7
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_vv1ve")
