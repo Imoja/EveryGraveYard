@@ -14,11 +14,17 @@ extends CharacterBody3D
 #@export var push = 1
 
 @onready var head = $Head
+@onready var camera = $Head/Camera
 
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
+
+func _play_footstep_audio():
+	$Footsteps.pitch_scale = randf_range(.85,1.15)
+	$Footsteps.volume_db = randf_range(.85,1.05)
+	$Footsteps.play()
 
 ## Begin calculating and influencing the players statistics
 var stats_yards: float = 0
@@ -82,7 +88,9 @@ func _physics_process(delta):
 	apply_controller_rotation()
 	head.rotation.x = clamp(head.rotation.x, -1, 1)
 	apply_animations(pos_delta)
+	
 	move_and_slide()
+	
 	
 	
 	#stats_yards = abs(velocity.x + velocity.z)
@@ -98,9 +106,9 @@ func apply_animations(pos_delta):
 		#if is_on_floor():
 		$Head/AnimationPlayer.play("head_bounce")
 		$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*10))
+		
 	else:
 		$Head/AnimationPlayer.play("RESET")
-
 
 var input_vector: Vector3
 func get_input_vector():
@@ -153,6 +161,7 @@ func apply_controller_rotation():
 	if InputEventJoypadMotion:
 		rotate_y(deg_to_rad(-axis_vector.x) * controller_sensitivity)
 		head.rotate_x(deg_to_rad(-axis_vector.y) * controller_sensitivity)
-
+		
+	
 func apply_head_sway(delta):
 	pass
