@@ -1,4 +1,4 @@
-extends Label
+extends CanvasLayer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -8,4 +8,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	self.text = str("YARDS: ") + str(get_parent().stats_yards)
+	$Yards.text = str("YARDS: ") + str(get_parent().stats_yards)
+	$Stamina.text = str("STAMINA: ") + str(get_parent().stats_stamina)
+	$Fitness.text = str("FTINESS: ") + str(get_parent().stats_fitness)

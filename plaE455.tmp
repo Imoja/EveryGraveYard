@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://Player.gd" id="1_ghq6o"]
 [ext_resource type="Script" path="res://UI_Debug.gd" id="2_1o8ch"]
-[ext_resource type="AudioStream" uid="uid://ca0n7m3pm3eoi" path="res://sounds/footsteps/Steps_tiles-015.ogg" id="2_8lq6x"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_63mm2"]
 radius = 0.3
@@ -11,21 +10,6 @@ height = 1.8
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4itap"]
 radius = 0.3
 height = 1.8
-
-[sub_resource type="Animation" id="Animation_klq3f"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 1, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_4ydwk"]
 resource_name = "head_bounce"
@@ -43,27 +27,40 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0, 1, 0), Vector3(0, 0.95, 0), Vector3(0, 1, 0)]
 }
-tracks/1/type = "audio"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Footsteps")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"clips": [{
-"end_offset": 0.0,
-"start_offset": 0.0,
-"stream": ExtResource("2_8lq6x")
-}],
-"times": PackedFloat32Array(0.2)
+
+[sub_resource type="Animation" id="Animation_klq3f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1, 0)]
 }
-tracks/1/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dijqr"]
 _data = {
 "RESET": SubResource("Animation_klq3f"),
 "head_bounce": SubResource("Animation_4ydwk")
 }
+
+[sub_resource type="GDScript" id="GDScript_p2m3a"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass"
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -96,18 +93,12 @@ offset_left = 10.0
 offset_top = 10.0
 offset_right = 50.0
 offset_bottom = 33.0
+script = SubResource("GDScript_p2m3a")
 
 [node name="Stamina" type="Label" parent="UI_Debug"]
-offset_left = 10.0
-offset_top = 30.0
-offset_right = 50.0
-offset_bottom = 53.0
+offset_right = 40.0
+offset_bottom = 23.0
 
 [node name="Fitness" type="Label" parent="UI_Debug"]
-offset_left = 10.0
-offset_top = 50.0
-offset_right = 50.0
-offset_bottom = 73.0
-
-[node name="Footsteps" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
+offset_right = 40.0
+offset_bottom = 23.0

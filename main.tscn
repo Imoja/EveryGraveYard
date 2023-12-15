@@ -55,5 +55,5 @@ shadow_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 use_collision = true
 collision_layer = 7
-size = Vector3(50, 1, 50)
+size = Vector3(500, 1, 500)
 material = SubResource("StandardMaterial3D_vv1ve")
