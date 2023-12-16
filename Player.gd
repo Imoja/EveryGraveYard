@@ -22,8 +22,8 @@ func _ready():
 
 
 func _play_footstep_audio():
-	$Footsteps.pitch_scale = randf_range(.85,1.15)
-	$Footsteps.volume_db = randf_range(.85,1.05)
+	$Footsteps.pitch_scale = randf_range(.90,1.05)
+	$Footsteps.volume_db = randf_range(.90,1.05)
 	$Footsteps.play()
 
 ## Begin calculating and influencing the players statistics
@@ -70,16 +70,6 @@ var max_speed: float = 0
 var pos_delta: float = 0
 func _process(delta):
 	update_stats(delta)
-	if Input.get_action_strength("sprint") && (stats_stamina > 0) && (stats_fitness > 0):
-		max_speed = sprint_max_speed
-		stats_stamina -= pos_delta
-		stats_fitness -= (pos_delta/2)
-		stats_stamina_regen = false
-		stats_fitness_regen = false
-	else:
-		max_speed = walk_max_speed
-		stats_stamina_regen = true
-		stats_fitness_regen = true
 
 func _physics_process(delta):
 	input_vector = get_input_vector()
@@ -87,17 +77,14 @@ func _physics_process(delta):
 	apply_movement(direction, delta, max_speed)
 	apply_friction(direction, delta)
 	apply_gravity(delta)
+	sprint()
 	jump()
 	apply_controller_rotation()
 	head.rotation.x = clamp(head.rotation.x, -1, 1)
 	apply_animations(pos_delta)
-	
 	move_and_slide()
 	
 	
-	
-	#stats_yards = abs(velocity.x + velocity.z)
-			
 	#for idx in get_slide_collision_count():
 	#	var collision = get_slide_collision(idx)
 	#	if collision.collider.is_in_group("bodies"):
@@ -108,9 +95,10 @@ func apply_animations(pos_delta):
 	if pos_delta:
 		#if is_on_floor():
 		$Head/AnimationPlayer.play("head_bounce")
-		$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*10))
+		$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*9))
 		
 	else:
+		$Head/AnimationPlayer.set_speed_scale(1)
 		$Head/AnimationPlayer.play("RESET")
 
 var input_vector: Vector3
@@ -139,7 +127,6 @@ func apply_friction(direction, delta):
 			velocity.x = velocity.move_toward(Vector3.ZERO, air_firction * delta).x
 			velocity.z = velocity.move_toward(Vector3.ZERO, air_firction * delta).z
 
-
 func apply_gravity(delta):
 	velocity.y += gravity * delta
 	velocity.y = clamp(velocity.y, gravity, jump_impulse)
@@ -154,6 +141,18 @@ func jump():
 		velocity.y = jump_impulse
 	if Input.is_action_just_released("jump") and velocity.y > jump_impulse / 2:
 		velocity.y = jump_impulse / 2
+
+func sprint():
+	if Input.get_action_strength("sprint") && (stats_stamina > 0) && (stats_fitness > 0):
+		max_speed = sprint_max_speed
+		stats_stamina -= pos_delta
+		stats_fitness -= (pos_delta/2)
+		stats_stamina_regen = false
+		stats_fitness_regen = false
+	else:
+		max_speed = walk_max_speed
+		stats_stamina_regen = true
+		stats_fitness_regen = true
 
 var axis_vector: Vector2 = Vector2.ZERO
 func apply_controller_rotation():
