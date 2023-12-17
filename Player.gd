@@ -95,7 +95,7 @@ func _physics_process(delta):
 	#		collision.collider.apply_central_impulse(-collision.normal * velocity.length() * push)
 
 func update_fov(delta):
-	camera.fov = lerp(camera.fov, default_fov-pow(pos_delta, 2), .1)
+	camera.fov = lerp(camera.fov, default_fov-(pos_delta*100), .1)
 	
 	
 
