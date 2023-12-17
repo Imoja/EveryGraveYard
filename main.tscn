@@ -63,3 +63,7 @@ use_collision = true
 collision_layer = 7
 size = Vector3(500, 1, 500)
 material = SubResource("ORMMaterial3D_fov4f")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.695354, -11)
+size = Vector3(5, 1, 19)

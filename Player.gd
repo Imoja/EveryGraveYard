@@ -15,7 +15,10 @@ extends CharacterBody3D
 
 @onready var head = $Head
 @onready var camera = $Head/Camera
+@onready var anim= $Head/AnimationPlayer
 
+#Viewport options
+@export var default_fov: float = 60
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -70,6 +73,8 @@ var max_speed: float = 0
 var pos_delta: float = 0
 func _process(delta):
 	update_stats(delta)
+	update_animations(delta)
+	update_fov(pos_delta)
 
 func _physics_process(delta):
 	input_vector = get_input_vector()
@@ -81,8 +86,8 @@ func _physics_process(delta):
 	jump()
 	apply_controller_rotation()
 	head.rotation.x = clamp(head.rotation.x, -1, 1)
-	apply_animations(pos_delta)
 	move_and_slide()
+	#$Head/Camera.fov = lerpf(default_fov, default_fov-(pos_delta*100), 10)
 	
 	
 	#for idx in get_slide_collision_count():
@@ -90,16 +95,24 @@ func _physics_process(delta):
 	#	if collision.collider.is_in_group("bodies"):
 	#		collision.collider.apply_central_impulse(-collision.normal * velocity.length() * push)
 
-func apply_animations(pos_delta):
+func update_fov(delta):
+	camera.fov = lerp(camera.fov, default_fov-pow(pos_delta, 2), .1)
+	
+
+func update_animations(delta):
 	#strafing
+	var head_bounce = anim.get_animation("head_bounce")
+	#var idx = head_bounce.find_track("/", 1)
+	var vec: Vector3 = Vector3(0, (1-pow(pos_delta, 2)), 0)
 	if pos_delta:
-		#if is_on_floor():
-		$Head/AnimationPlayer.play("head_bounce")
-		$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*9))
-		
+		if is_on_floor():
+			$Head/AnimationPlayer.play("head_bounce")
+			$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*9))
+			head_bounce.track_set_key_value(0, 1, vec)
 	else:
-		$Head/AnimationPlayer.set_speed_scale(1)
+		$Head/AnimationPlayer.set_speed_scale(0.5)
 		$Head/AnimationPlayer.play("RESET")
+		#$Head/AnimationPlayer.anima
 
 var input_vector: Vector3
 func get_input_vector():
