@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://dmhivv6npj5df"]
+
+[ext_resource type="PackedScene" uid="uid://hg0glqxhmxwi" path="res://player.tscn" id="1_4g0ip"]
+[ext_resource type="Script" path="res://csg_combiner_3d.gd" id="1_4mane"]
+[ext_resource type="Texture2D" uid="uid://bsvvmib4tt1mh" path="res://textures/Floor/kenney_prototype-textures/Vector/texture_08.svg" id="3_dyh3k"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y1h0p"]
+sky_top_color = Color(0.0627451, 0.0627451, 0.0784314, 1)
+sky_horizon_color = Color(0.515686, 0.515686, 0.519608, 1)
+sky_energy_multiplier = 0.1
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.515686, 0.515686, 0.519608, 1)
+
+[sub_resource type="Sky" id="Sky_awr2b"]
+sky_material = SubResource("ProceduralSkyMaterial_y1h0p")
+
+[sub_resource type="Environment" id="Environment_pkccj"]
+background_mode = 2
+sky = SubResource("Sky_awr2b")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gq8oa"]
+albedo_texture = ExtResource("3_dyh3k")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D"]
+visible = false
+use_collision = true
+script = ExtResource("1_4mane")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pkccj")
+
+[node name="Player" parent="." instance=ExtResource("1_4g0ip")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.11042, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+size = Vector3(10000, 1, 10000)
+material = SubResource("StandardMaterial3D_gq8oa")

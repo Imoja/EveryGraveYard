@@ -13,3 +13,5 @@ func _process(delta):
 	$Fitness.text = str("FTINESS: ") + str(get_parent().stats_fitness)
 	$Delta.text = str("POS_DELTA: ") + str(get_parent().pos_delta)
 	$FOV.text = str("FOV: ") + str(get_parent().camera.fov)
+	$Noise.text = str("Noise: ") + str(get_parent().foot_noise)
+	$Pitch.text = str("Pitch: ") + str(get_parent().foot_pitch)

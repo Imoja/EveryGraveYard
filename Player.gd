@@ -3,8 +3,7 @@ extends CharacterBody3D
 @export var walk_max_speed = 1
 @export var sprint_max_speed = 5
 @export var acceleration = 4
-@export var friction = 100
-@export var air_firction = 10
+@export var friction = 69
 @export var jump_impulse = 8
 @export var gravity = -40
 
@@ -16,6 +15,10 @@ extends CharacterBody3D
 @onready var head = $Head
 @onready var camera = $Head/Camera
 @onready var anim= $Head/AnimationPlayer
+@onready var feet= $Footsteps
+
+var foot_noise
+var foot_pitch
 
 #Viewport options
 @export var default_fov: float = 60
@@ -23,11 +26,6 @@ extends CharacterBody3D
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-
-func _play_footstep_audio():
-	$Footsteps.pitch_scale = randf_range(.90,1.05)
-	$Footsteps.volume_db = randf_range(.90,1.05)
-	$Footsteps.play()
 
 ## Begin calculating and influencing the players statistics
 var stats_yards: float = 0
@@ -72,9 +70,7 @@ func _unhandled_input(event):
 var max_speed: float = 0
 var pos_delta: float = 0
 func _process(delta):
-	update_stats(delta)
-	update_animations(delta)
-	update_fov(pos_delta)
+	pass
 
 func _physics_process(delta):
 	input_vector = get_input_vector()
@@ -87,6 +83,9 @@ func _physics_process(delta):
 	apply_controller_rotation()
 	head.rotation.x = clamp(head.rotation.x, -1, 1)
 	move_and_slide()
+	update_stats(delta)
+	update_animations(delta)
+	update_fov(pos_delta)
 	#$Head/Camera.fov = lerpf(default_fov, default_fov-(pos_delta*100), 10)
 	
 	
@@ -98,20 +97,28 @@ func _physics_process(delta):
 func update_fov(delta):
 	camera.fov = lerp(camera.fov, default_fov-pow(pos_delta, 2), .1)
 	
+	
+
+func _play_footstep_audio():
+	feet.play()
 
 func update_animations(delta):
 	#strafing
 	var head_bounce = anim.get_animation("head_bounce")
 	#var idx = head_bounce.find_track("/", 1)
-	var vec: Vector3 = Vector3(0, (1-pow(pos_delta, 2)), 0)
+	var vec: Vector3 = Vector3(0, (1-pos_delta), 0)
 	if pos_delta:
 		if is_on_floor():
-			$Head/AnimationPlayer.play("head_bounce")
-			$Head/AnimationPlayer.set_speed_scale(.5+(pos_delta*9))
+			anim.play("head_bounce")
+			anim.set_speed_scale(.5+(pos_delta*10))
 			head_bounce.track_set_key_value(0, 1, vec)
+	 		#foot_noise = 100*pos_delta
+			#head_bounce.track_set_key_value(3, 0, foot_noise)
+			#foot_pitch = 1+pos_delta
+			#head_bounce.track_set_key_value(4, 0, foot_pitch)
 	else:
-		$Head/AnimationPlayer.set_speed_scale(0.5)
-		$Head/AnimationPlayer.play("RESET")
+		#$Head/AnimationPlayer.set_speed_scale(0.5)
+		anim.play("RESET")
 		#$Head/AnimationPlayer.anima
 
 var input_vector: Vector3
@@ -136,9 +143,6 @@ func apply_friction(direction, delta):
 	if direction == Vector3.ZERO:
 		if is_on_floor():
 			velocity = velocity.move_toward(Vector3.ZERO, friction * delta)
-		else:
-			velocity.x = velocity.move_toward(Vector3.ZERO, air_firction * delta).x
-			velocity.z = velocity.move_toward(Vector3.ZERO, air_firction * delta).z
 
 func apply_gravity(delta):
 	velocity.y += gravity * delta
